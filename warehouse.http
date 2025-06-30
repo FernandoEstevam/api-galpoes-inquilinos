@@ -1,0 +1,34 @@
+##
+POST http://localhost:3001/api/warehouse HTTP/1.1
+content-type: application/json
+Date: {{$guid}}
+
+{
+  "name":"Galpão 280",        
+  "code":"MODULO-003",                   
+  "address":"Rua marina ciufuli zanfelice, 260",     
+  "areaM2": 500.35,      
+  "description":"Modulo está tudo ok"
+}
+
+###
+GET http://localhost:3001/api/warehouse HTTP/1.1
+Date: {{$guid}}
+
+###
+GET http://localhost:3001/api/warehouse/search?code=MODULO-002 HTTP/1.1
+Date: {{$guid}}
+
+###
+PATCH http://localhost:3001/api/warehouse/cmcjgogd10000v34turcyqe7d HTTP/1.1
+content-type: application/json
+Date: {{$guid}}
+
+{
+  "code":"MODULO-004"
+}
+
+
+###
+DELETE  http://localhost:3001/api/warehouse/cmcjikuzw0000v3xcaeq3bbxm HTTP/1.1
+Date: {{$guid}}

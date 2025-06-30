@@ -1,0 +1,38 @@
+##
+POST http://localhost:3001/api/tenant HTTP/1.1
+content-type: application/json
+Date: {{$guid}}
+
+{
+  "name": "Telstar S.A 2",
+  "document": "01.002.0003/0001-07",
+  "phone": "11-2222-2222",
+  "email": "telstar@telstar.com.br",
+  "address": "rua marina ciufuli zanfelice"
+}
+
+###
+GET http://localhost:3001/api/tenant HTTP/1.1
+Date: {{$guid}}
+
+###
+GET http://localhost:3001/api/tenant/search?id=3c32855c-f4fd-4686-b279-a262cd269c5d HTTP/1.1
+Date: {{$guid}}
+
+###
+PATCH http://localhost:3001/api/tenant/f2053e6e-4903-452a-90a3-ee3217cb5dce HTTP/1.1
+content-type: application/json
+Date: {{$guid}}
+
+{
+  "name": "Enjoy S.A",
+  "document": "05.004.0003/0002-01",
+  "phone": "11-3333-3333",
+  "email": "ejoy@ejoy.com.br",
+  "address": "rua marina ciufuli zanfelice, 260"
+}
+
+
+###
+DELETE  http://localhost:3001/api/tenant/049b5e64-7073-466f-b469-b647358075f7 HTTP/1.1
+Date: {{$guid}}

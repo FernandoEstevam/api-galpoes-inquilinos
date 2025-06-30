@@ -1,0 +1,105 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tenant {
+  id        String           @id @default(uuid())
+  name      String
+  document  String           @unique // CPF ou CNPJ
+  phone     String?
+  email     String?
+  address   String?
+  contracts RentalContract[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Warehouse {
+  id          String           @id @default(cuid())
+  name        String
+  code        String           @unique // Ex: GALP-001
+  address     String
+  areaM2      Float?
+  description String?
+  contracts   RentalContract[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RentalContract {
+  id               String    @id @default(cuid())
+  tenantId         String
+  warehouseId      String
+  startDate        DateTime
+  endDate          DateTime
+  initialValue     Decimal
+  currentValue     Decimal
+  lastAdjustmentAt DateTime?
+  notes            String?
+  isActive         Boolean   @default(true)
+
+  renewedFromId String? // auto-relacionamento
+  renewedFrom   RentalContract?  @relation("RenewedFrom", fields: [renewedFromId], references: [id])
+  renewals      RentalContract[] @relation("RenewedFrom")
+
+  tenant      Tenant          @relation(fields: [tenantId], references: [id])
+  warehouse   Warehouse       @relation(fields: [warehouseId], references: [id])
+  adjustments Adjustment[]
+  payments    RentalPayment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Adjustment {
+  id               String   @id @default(cuid())
+  rentalContractId String
+  date             DateTime
+  oldValue         Decimal
+  newValue         Decimal
+  reason           String?
+
+  rentalContract RentalContract @relation(fields: [rentalContractId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model RentalPayment {
+  id               String        @id @default(cuid())
+  rentalContractId String
+  month            DateTime // sempre o primeiro dia do mês, ex: 2025-06-01
+  dueDate          DateTime
+  paidDate         DateTime?
+  amountDue        Decimal
+  amountPaid       Decimal
+  status           PaymentStatus
+  notes            String?
+
+  rentalContract RentalContract @relation(fields: [rentalContractId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  overdue
+  partial
+}
