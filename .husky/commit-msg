@@ -1,1 +1,3 @@
-npx --no-install tsx commitlint.config.ts --edit "$1"
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+npx --no-install ts-node commitlint.config.ts --edit "$1"
