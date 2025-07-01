@@ -1,4 +1,4 @@
-import {z} from 'zod/v4'
+import {cuid, z} from 'zod/v4'
 
 export const baseRentalContractInputSchema = z.object({
   tenantId: z.uuid(),
@@ -7,6 +7,23 @@ export const baseRentalContractInputSchema = z.object({
   endDate: z.date(),
   initialValue: z.union([z.number(), z.string()]).transform(Number),
   currentValue: z.union([z.number(), z.string()]).transform(Number),
+  lastAdjustmentAt: z.date().optional(),
+  notes: z.string().optional(),
+  renewedFromId: z.cuid().optional(),
+  isActive: z.boolean().optional(),
+})
+
+export const rentalContractInputParamsId = z.object({
+  id: cuid()
+})
+
+export const rentalContractInputUpdate = z.object({
+  tenantId: z.uuid().optional(),
+  warehouseId: z.cuid().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  initialValue: z.union([z.number(), z.string()]).transform(Number).optional(),
+  currentValue: z.union([z.number(), z.string()]).transform(Number).optional(),
   lastAdjustmentAt: z.date().optional(),
   notes: z.string().optional(),
   renewedFromId: z.cuid().optional(),
@@ -27,4 +44,6 @@ export const rentalContractOutputSchema = baseRentalContractInputSchema.extend({
 })
 
 export type RentalContractInput = z.infer<typeof rentalContractInputSchema>
+export type RentalContractInputUpdate = z.infer<typeof rentalContractInputUpdate>
 export type RentalContractOutput = z.infer<typeof rentalContractOutputSchema>
+export type RentalContractInputParamsId = z.infer<typeof rentalContractInputParamsId>
