@@ -1,12 +1,16 @@
-export class FindByIdRentalContractUseCase {
-  constructor(private warehouseRepository: WarehouseRepository ){}
+import { NotFoundError } from "@/errors/not-found.error"
+import { RentalContractRepository } from "@/repositories/rentalContract-repository"
+import { RentalContractInputParamsId, RentalContractOutput } from "@/schemas/rentalContract.schema"
 
-   async execute(where: WarehouseInputParamsSchema): Promise<WarehouseOutput> {
-    
-    const warehouseExists = await this.warehouseRepository.findByIdOrCode(where)
-    
-    if (!warehouseExists) throw new WarehouseNotFoundError()
-    
-    return warehouseExists
+export class FindByIdRentalContractUseCase {
+  constructor(private rentalContractRepository: RentalContractRepository) { }
+
+  async execute(id: RentalContractInputParamsId): Promise<RentalContractOutput> {
+
+    const rentalContractExists = await this.rentalContractRepository.findById(id)
+
+    if (!rentalContractExists) throw new NotFoundError('Rental Contract')
+
+    return rentalContractExists
   }
 }

@@ -1,10 +1,14 @@
+import { NotFoundError } from "@/errors/not-found.error"
+import { RentalContractRepository } from "@/repositories/rentalContract-repository"
+import { RentalContractInputParamsId } from "@/schemas/rentalContract.schema"
+
 export class DeleteRentalContractUseCase {
-  constructor(private warehouseRepository: WarehouseRepository ){}
+  constructor(private rentalContractRepository: RentalContractRepository) { }
 
-   async execute({id}:WarehouseInputIdSchema): Promise<void> {
-      const warehouseExists = await this.warehouseRepository.findById({id})
-      if (!warehouseExists) throw new WarehouseNotFoundError()
+  async execute({ id }: RentalContractInputParamsId): Promise<void> {
+    const rentalContractExists = await this.rentalContractRepository.findById({ id })
+    if (!rentalContractExists) throw new NotFoundError('RentaContract')
 
-      await this.warehouseRepository.delete({id})
+    await this.rentalContractRepository.delete({ id })
   }
 }

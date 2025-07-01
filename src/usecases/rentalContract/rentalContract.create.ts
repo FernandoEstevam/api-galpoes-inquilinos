@@ -1,16 +1,10 @@
+import { RentalContractRepository } from "@/repositories/rentalContract-repository"
+import { RentalContractInput } from "@/schemas/rentalContract.schema"
+
 export class CrateRentalContractUseCase {
-  constructor(private warehouseRepository: WarehouseRepository ){}
+  constructor(private rentalContractRepository: RentalContractRepository) { }
 
-   async execute(data: WarehouseInput): Promise<void> {
-      const tenantExists = await this.warehouseRepository.findByIdOrCode({code: data.code})
-    if (tenantExists) throw new WarehouseAlreadyExistsError()
-
-    await this.warehouseRepository.create({
-      name: data.name,
-      code: data.code,
-      address: data.address,
-      areaM2: data.areaM2,
-      description: data.description
-    })
+  async execute(data: RentalContractInput): Promise<void> {
+    await this.rentalContractRepository.create(data)
   }
 }

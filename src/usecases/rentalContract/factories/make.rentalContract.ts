@@ -1,29 +1,34 @@
+import { PrismaRentalContractRepository } from "@/repositories/prisma/rentalContract-prisma-repository"
 import { FastifyInstance } from "fastify"
+import { CrateRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.create"
+import { FindAllRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.findAll"
+import { UpdateRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.update"
+import { DeleteRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.delete"
 
 export class MakeRentalContract {
-  private prismaWarehouseRepository: PrismaWarehouseRepository
-  constructor(private app: FastifyInstance){
-    this.prismaWarehouseRepository = new PrismaWarehouseRepository(this.app)
+  private prismaRentalContractRepository: PrismaRentalContractRepository
+  constructor(private app: FastifyInstance) {
+    this.prismaRentalContractRepository = new PrismaRentalContractRepository(this.app)
   }
 
   create() {
-    return new CrateWarehouseUseCase(this.prismaWarehouseRepository)
+    return new CrateRentalContractUseCase(this.prismaRentalContractRepository)
   }
 
   list() {
-    return new FindAllWarehouseUseCase(this.prismaWarehouseRepository)
+    return new FindAllRentalContractUseCase(this.prismaRentalContractRepository)
   }
 
   findByIdOrCode() {
-    return new FindByIdOrCodeWarehouseUseCase(this.prismaWarehouseRepository)
+    return new FindAllRentalContractUseCase(this.prismaRentalContractRepository)
   }
 
   update() {
-     return new UpdateWarehouseUseCase(this.prismaWarehouseRepository)
+    return new UpdateRentalContractUseCase(this.prismaRentalContractRepository)
   }
 
   delete() {
-    return new DeleteWarehouseUseCase(this.prismaWarehouseRepository)
+    return new DeleteRentalContractUseCase(this.prismaRentalContractRepository)
   }
 }
 
