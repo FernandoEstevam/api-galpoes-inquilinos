@@ -1,10 +1,10 @@
-import { RentalContractInput, RentalContractInputParamsId, RentalContractInputUpdate } from "@/schemas/rentalContract.schema"
+import { RentalContractInput, RentalContractInputParamsId, RentalContractInputUpdate, RentalContractOutput } from "@/schemas/rentalContract.schema"
 import { RentalContract } from "@prisma/client"
 
 export interface RentalContractRepository {
-  findById({id}: RentalContractInputParamsId): Promise<RentalContract | null>
+  findById({ id }: RentalContractInputParamsId): Promise<RentalContractOutput | null>
   create(data: RentalContractInput): Promise<void>
-  findAll(): Promise<RentalContract[]>
-  delete({id}:RentalContractInputParamsId): Promise<void>
-  update({id}:RentalContractInputParamsId, data: RentalContractInputUpdate):Promise<RentalContract> 
+  findAll(): Promise<RentalContractOutput[]>
+  delete({ id }: RentalContractInputParamsId): Promise<void>
+  update({ id }: RentalContractInputParamsId, data: RentalContractInputUpdate): Promise<RentalContractOutput>
 }
