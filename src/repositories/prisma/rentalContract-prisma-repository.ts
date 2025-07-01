@@ -1,29 +1,28 @@
 import { FastifyInstance } from "fastify";
+import { RentalContractRepository } from "../rentalContract-repository";
+import { RentalContractInput, RentalContractInputParamsId, RentalContractInputUpdate, RentalContractOutput } from "@/schemas/rentalContract.schema";
 
-export class PrismaRentalContractRepository implements WarehouseRepository {
-  
-  constructor(private app: FastifyInstance){}
-  async findById({id}:WarehouseInputIdSchema): Promise<Warehouse | null> {
-    return await this.app.prisma.warehouse.findUnique({ where: { id } })
+export class PrismaRentalContractRepository implements RentalContractRepository {
+
+  constructor(private app: FastifyInstance) { }
+
+  async findById(id: RentalContractInputParamsId): Promise<RentalContractOutput | null> {
+    return await this.app.prisma.rentalContract.findUnique({ where: id })
   }
 
-  async delete({id}:WarehouseInputIdSchema): Promise<void> {
-    await this.app.prisma.warehouse.delete({ where: { id } })
+  async delete({ id }: RentalContractInputParamsId): Promise<void> {
+    await this.app.prisma.rentalContract.delete({ where: { id } })
   }
 
-  async update({id}: WarehouseInputIdSchema, data: WarehouseInputUpdate): Promise<Warehouse> {
-    return await this.app.prisma.warehouse.update({ where: {id}, data })
+  async update({ id }: RentalContractInputParamsId, data: RentalContractInputUpdate): Promise<RentalContractOutput> {
+    return await this.app.prisma.rentalContract.update({ where: { id }, data })
   }
 
-  async findByIdOrCode(where: WarehouseInputParamsSchema):Promise<Warehouse | null> {
-    return await this.app.prisma.warehouse.findFirst({ where })
+  async create(data: RentalContractInput): Promise<void> {
+    await this.app.prisma.rentalContract.create({ data })
   }
 
-  async create(data: WarehouseInput) {
-    await this.app.prisma.warehouse.create({ data })
-  }
-
-  async findAll(): Promise<Warehouse[]> {
-    return await this.app.prisma.warehouse.findMany() 
+  async findAll(): Promise<RentalContractOutput[]> {
+    return await this.app.prisma.rentalContract.findMany()
   }
 }

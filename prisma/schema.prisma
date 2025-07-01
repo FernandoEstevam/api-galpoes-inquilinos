@@ -49,8 +49,8 @@ model RentalContract {
   warehouseId      String
   startDate        DateTime
   endDate          DateTime
-  initialValue     Decimal
-  currentValue     Decimal
+  initialValue     Int
+  currentValue     Int
   lastAdjustmentAt DateTime?
   notes            String?
   isActive         Boolean   @default(true)
@@ -72,8 +72,8 @@ model Adjustment {
   id               String   @id @default(cuid())
   rentalContractId String
   date             DateTime
-  oldValue         Decimal
-  newValue         Decimal
+  oldValue         Int
+  newValue         Int
   reason           String?
 
   rentalContract RentalContract @relation(fields: [rentalContractId], references: [id])
@@ -87,8 +87,8 @@ model RentalPayment {
   month            DateTime // sempre o primeiro dia do mês, ex: 2025-06-01
   dueDate          DateTime
   paidDate         DateTime?
-  amountDue        Decimal
-  amountPaid       Decimal
+  amountDue        Int
+  amountPaid       Int
   status           PaymentStatus
   notes            String?
 

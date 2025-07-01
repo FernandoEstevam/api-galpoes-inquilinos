@@ -1,51 +1,55 @@
+import { rentalContractInputParamsId, rentalContractInputSchema, RentalContractListOutput, RentalContractOutput } from "@/schemas/rentalContract.schema"
+import { MakeRentalContract } from "@/usecases/rentalContract/factories/make.rentalContract"
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+
 class RentalContractController {
 
-  private makeWarehouse: MakeWarehouse
 
-  constructor(private app: FastifyInstance) {
-    this.makeWarehouse = new MakeWarehouse(this.app)
+
+  constructor(private app: FastifyInstance, private makeRentalContract: MakeRentalContract) {
+    this.makeRentalContract = new MakeRentalContract(this.app)
   }
 
-  async create(req: FastifyRequest, rep: FastifyReply): Promise<WarehouseOutput | void> {
-    
-    const {name,code,address,areaM2,description} = warehouseBaseSchema.parse(req.body)
+  async create(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput | void> {
 
-    const warehouseCreateExecute = this.makeWarehouse.create()
+    const data = rentalContractInputSchema.parse(req.body)
 
-    await warehouseCreateExecute.execute({name,code,address,areaM2,description})
+    const warehouseCreateExecute = this.makeRentalContract.create()
+
+    await warehouseCreateExecute.execute(data)
 
     return rep.status(201).send({ message: 'Warehouse created' })
   }
 
-  async findAll(req: FastifyRequest, rep: FastifyReply): Promise<WarehouseListOutput> {
-    const getAll = await this.makeWarehouse.list().execute() 
+  async findAll(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractListOutput> {
+    const getAll = await this.makeRentalContract.list().execute()
     return rep.status(200).send(getAll)
   }
 
-  
-  async findByIdOrCode(req: FastifyRequest, rep: FastifyReply): Promise<WarehouseOutput> {
-    
-    const { id, code } = warehouseInputParamsSchema.parse(req.query) as { id?: string; code?: string }
 
-    const warehouse = await this.makeWarehouse.findByIdOrCode().execute({id, code})
-    
-    return rep.status(200).send(warehouse) 
+  async findByIdOrCode(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
+
+    const { id, code } = rentalContractInputParamsId.parse(req.query) as { id?: string; code?: string }
+
+    const warehouse = await this.makeRentalContract.findByIdOrCode().execute({ id, code })
+
+    return rep.status(200).send(warehouse)
   }
 
-  async update(req: FastifyRequest, rep: FastifyReply): Promise<WarehouseOutput> {
+  async update(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
     const { id } = warehouseInputIdSchema.parse(req.params)
     const data = warehouseInputUpdateSchema.parse(req.body)
-    
-    const warehouse = await this.makeWarehouse.update().execute({id}, data)
+
+    const warehouse = await this.makeRentalContract.update().execute({ id }, data)
 
     return rep.status(200).send(warehouse)
   }
 
   async delete(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    
+
     const { id } = warehouseInputIdSchema.parse(req.params)
-    
-    await this.makeWarehouse.delete().execute({id})
+
+    await this.makeRentalContract.delete().execute({ id })
 
     return rep.status(204).send()
   }

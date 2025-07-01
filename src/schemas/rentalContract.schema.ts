@@ -1,4 +1,4 @@
-import {cuid, z} from 'zod/v4'
+import { cuid, z } from 'zod/v4'
 
 export const baseRentalContractInputSchema = z.object({
   tenantId: z.uuid(),
@@ -43,7 +43,21 @@ export const rentalContractOutputSchema = baseRentalContractInputSchema.extend({
   updatedAt: z.date(),
 })
 
+export const rentalContractListOutput = z.array(z.object({
+  tenantId: z.uuid(),
+  warehouseId: z.cuid(),
+  startDate: z.date(),
+  endDate: z.date(),
+  initialValue: z.union([z.number(), z.string()]).transform(Number),
+  currentValue: z.union([z.number(), z.string()]).transform(Number),
+  lastAdjustmentAt: z.date().optional(),
+  notes: z.string().optional(),
+  renewedFromId: z.cuid().optional(),
+  isActive: z.boolean().optional(),
+}))
+
 export type RentalContractInput = z.infer<typeof rentalContractInputSchema>
 export type RentalContractInputUpdate = z.infer<typeof rentalContractInputUpdate>
 export type RentalContractOutput = z.infer<typeof rentalContractOutputSchema>
+export type RentalContractListOutput = z.infer<typeof rentalContractListOutput>
 export type RentalContractInputParamsId = z.infer<typeof rentalContractInputParamsId>
