@@ -1,0 +1,1 @@
+npx --no-install tsx commitlint.config.ts --edit "$1"
