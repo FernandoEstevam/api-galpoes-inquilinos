@@ -17,6 +17,10 @@ export const rentalContractInputParamsId = z.object({
   id: cuid()
 })
 
+export const rentalContractResponse = z.object({
+  message: z.string(),
+})
+
 export const rentalContractInputUpdate = z.object({
   tenantId: z.uuid().optional(),
   warehouseId: z.cuid().optional(),
