@@ -1,10 +1,8 @@
-import { rentalContractInputParamsId, rentalContractInputSchema, RentalContractListOutput, RentalContractOutput } from "@/schemas/rentalContract.schema"
+import { rentalContractInputParamsId, rentalContractInputSchema, rentalContractInputUpdate, RentalContractListOutput, RentalContractOutput } from "@/schemas/rentalContract.schema"
 import { MakeRentalContract } from "@/usecases/rentalContract/factories/make.rentalContract"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 class RentalContractController {
-
-
 
   constructor(private app: FastifyInstance, private makeRentalContract: MakeRentalContract) {
     this.makeRentalContract = new MakeRentalContract(this.app)
@@ -29,16 +27,16 @@ class RentalContractController {
 
   async findByIdOrCode(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
 
-    const { id, code } = rentalContractInputParamsId.parse(req.query) as { id?: string; code?: string }
+    const { id } = rentalContractInputParamsId.parse(req.query)
 
-    const warehouse = await this.makeRentalContract.findByIdOrCode().execute({ id, code })
+    const warehouse = await this.makeRentalContract.findById().execute({ id })
 
     return rep.status(200).send(warehouse)
   }
 
   async update(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
-    const { id } = warehouseInputIdSchema.parse(req.params)
-    const data = warehouseInputUpdateSchema.parse(req.body)
+    const { id } = rentalContractInputParamsId.parse(req.params)
+    const data = rentalContractInputUpdate.parse(req.body)
 
     const warehouse = await this.makeRentalContract.update().execute({ id }, data)
 
@@ -47,7 +45,7 @@ class RentalContractController {
 
   async delete(req: FastifyRequest, rep: FastifyReply): Promise<void> {
 
-    const { id } = warehouseInputIdSchema.parse(req.params)
+    const { id } = rentalContractInputParamsId.parse(req.params)
 
     await this.makeRentalContract.delete().execute({ id })
 
@@ -56,4 +54,4 @@ class RentalContractController {
 
 }
 
-export default WarehouseController
+export default RentalContractController
