@@ -16,7 +16,7 @@ class RentalContractController {
 
     await warehouseCreateExecute.execute(data)
 
-    return rep.status(201).send({ message: 'Warehouse created' })
+    return rep.status(201).send({ message: 'Renta Contract created' })
   }
 
   async findAll(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractListOutput> {
@@ -25,7 +25,7 @@ class RentalContractController {
   }
 
 
-  async findByIdOrCode(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
+  async findById(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
 
     const { id } = rentalContractInputParamsId.parse(req.query)
 
