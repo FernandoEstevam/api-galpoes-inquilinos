@@ -1,4 +1,4 @@
-import { cuid, z } from 'zod/v4'
+import { cuid, nullable, z } from 'zod/v4'
 
 export const baseRentalContractInputSchema = z.object({
   tenantId: z.uuid(),
@@ -7,9 +7,9 @@ export const baseRentalContractInputSchema = z.object({
   endDate: z.date(),
   initialValue: z.union([z.number(), z.string()]).transform(Number),
   currentValue: z.union([z.number(), z.string()]).transform(Number),
-  lastAdjustmentAt: z.date().optional(),
-  notes: z.string().optional(),
-  renewedFromId: z.cuid().optional(),
+  lastAdjustmentAt: z.date().nullable().optional(),
+  notes: z.string().nullable().optional(),
+  renewedFromId: z.cuid().nullable().optional(),
   isActive: z.boolean().optional(),
 })
 
