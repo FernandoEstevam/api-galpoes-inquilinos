@@ -1,5 +1,5 @@
 import RentalContractController from "@/controllers/RentalContractController";
-import { rentalContractInputParamsId, rentalContractInputSchema, rentalContractInputUpdate, rentalContractListOutput, rentalContractOutputSchema } from "@/schemas/rentalContract.schema";
+import { rentalContractInputParamsId, rentalContractInputSchema, rentalContractInputUpdate, rentalContractListOutput, rentalContractOutputSchema, rentalContractResponse } from "@/schemas/rentalContract.schema";
 import { FastifyInstance } from "fastify";
 
 export const RentalContractRoutes = (app: FastifyInstance) => {
@@ -37,7 +37,7 @@ export const RentalContractRoutes = (app: FastifyInstance) => {
       description: "Create new rental contract",
       body: rentalContractInputSchema,
       response: {
-        201: {}
+        201: rentalContractResponse
       }
     }
   }, async (req, rep) => {
@@ -64,7 +64,7 @@ export const RentalContractRoutes = (app: FastifyInstance) => {
       description: "Delete tenant",
       params: rentalContractInputParamsId,
       response: {
-        204: {}
+        204: rentalContractResponse
       }
     }
   }, async (req, rep) => {
