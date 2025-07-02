@@ -4,6 +4,7 @@ import { CrateRentalContractUseCase } from "@/usecases/rentalContract/rentalCont
 import { FindAllRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.findAll"
 import { UpdateRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.update"
 import { DeleteRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.delete"
+import { FindByIdRentalContractUseCase } from "@/usecases/rentalContract/rentalContract.findById"
 
 export class MakeRentalContract {
   private prismaRentalContractRepository: PrismaRentalContractRepository
@@ -19,8 +20,8 @@ export class MakeRentalContract {
     return new FindAllRentalContractUseCase(this.prismaRentalContractRepository)
   }
 
-  findByIdOrCode() {
-    return new FindAllRentalContractUseCase(this.prismaRentalContractRepository)
+  findById() {
+    return new FindByIdRentalContractUseCase(this.prismaRentalContractRepository)
   }
 
   update() {
