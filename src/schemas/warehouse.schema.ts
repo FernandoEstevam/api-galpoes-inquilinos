@@ -24,7 +24,7 @@ export const warehouseOutputSchema = z.object({
   address: z.string(),
   areaM2: z.number().nullable(),
   description: z.string().nullable(),
-  createdAt: z.date(),
+  createdAt: z.iso.datetime(),
 })
 
 
@@ -38,11 +38,11 @@ export const warehouseInputIdSchema = z.object({
 })
 
 
-export const warehouseOutputCreateSchema =  z.object({
+export const warehouseOutputCreateSchema = z.object({
   message: z.literal('Warehouse created'),
 })
 
-export const warehouseOutputDeleteSchema =  z.object({
+export const warehouseOutputDeleteSchema = z.object({
   message: z.never(),
 })
 
