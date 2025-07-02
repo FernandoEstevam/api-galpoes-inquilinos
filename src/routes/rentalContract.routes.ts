@@ -1,71 +1,73 @@
+import RentalContractController from "@/controllers/RentalContractController";
+import { rentalContractInputParamsId, rentalContractInputSchema, rentalContractInputUpdate, rentalContractListOutput, rentalContractOutputSchema } from "@/schemas/rentalContract.schema";
 import { FastifyInstance } from "fastify";
 
 export const RentalContractRoutes = (app: FastifyInstance) => {
 
-  const warehouse: WarehouseController = new WarehouseController(app)
+  const rentalContract: RentalContractController = new RentalContractController(app)
 
-   app.get('/',{
+  app.get('/', {
     schema: {
-      tags: ['warehouse'],
-      description: "Get all warehouses",
+      tags: ['rental contract'],
+      description: "Get all rental contracts",
       response: {
-        200: warehouseOutputListSchema
+        200: rentalContractListOutput
       }
     }
   }, async (req, rep) => {
-    return warehouse.findAll(req, rep)
+    return rentalContract.findAll(req, rep)
   })
 
-  app.get('/search',{
+  app.get('/search', {
     schema: {
-      tags: ['warehouse'],
-      description: "Find by id or code warehouses",
-      querystring: warehouseInputParamsSchema,
+      tags: ['rental contract'],
+      description: "Find by id or code rental contracts",
+      querystring: rentalContractInputParamsId,
       response: {
-        200: warehouseOutputSchema
+        200: rentalContractOutputSchema
       }
     }
   }, async (req, rep) => {
-    return warehouse.findByIdOrCode(req, rep)
+    return rentalContract.findById(req, rep)
   })
 
-  app.post('/',{
+  app.post('/', {
     schema: {
-      tags: ['warehouse'],
-      description: "Create new warehouse",
-      body: warehouseBaseSchema,
+      tags: ['rental contract'],
+      description: "Create new rental contract",
+      body: rentalContractInputSchema,
       response: {
-        201: warehouseOutputCreateSchema
+        201: {}
       }
     }
   }, async (req, rep) => {
-    return warehouse.create(req, rep)
+    return rentalContract.create(req, rep)
   })
 
-  app.patch('/:id',{
+  app.patch('/:id', {
     schema: {
-      tags: ['warehouse'],
+      tags: ['rental contract'],
       description: "Update tenant",
-      params: warehouseInputIdSchema,
-      body: warehouseInputUpdateSchema,
+      params: rentalContractInputParamsId,
+      body: rentalContractInputUpdate,
       response: {
-        200: warehouseOutputSchema
+        200: rentalContractOutputSchema
       }
     }
   }, async (req, rep) => {
-    return warehouse.update(req, rep)
+    return rentalContract.update(req, rep)
   })
-  
-  app.delete('/:id',{
+
+  app.delete('/:id', {
     schema: {
-      tags: ['warehouse'],
+      tags: ['rental contract'],
       description: "Delete tenant",
-      params: warehouseInputIdSchema,
+      params: rentalContractInputParamsId,
       response: {
-        204: warehouseOutputDeleteSchema
+        204: {}
       }
     }
   }, async (req, rep) => {
-    return warehouse.delete(req, rep)
+    return rentalContract.delete(req, rep)
   })
 }
