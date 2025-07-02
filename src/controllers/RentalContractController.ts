@@ -16,7 +16,7 @@ class RentalContractController {
 
     await warehouseCreateExecute.execute(data)
 
-    return rep.status(201).send({ message: 'Renta Contract created' })
+    return rep.status(201).send()
   }
 
   async findAll(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractListOutput> {
