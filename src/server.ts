@@ -2,16 +2,17 @@ import Fastify from 'fastify'
 import prismaPlugin from './plugins/prisma'
 import { TenantRoutes } from './routes/tenant.routes'
 import { env } from './env'
-import {fastifyCors} from '@fastify/cors'
-import {validatorCompiler, serializerCompiler, jsonSchemaTransform} from 'fastify-type-provider-zod'
-import {fastifySwagger} from '@fastify/swagger'
-import {fastifySwaggerUi} from '@fastify/swagger-ui'
+import { fastifyCors } from '@fastify/cors'
+import { validatorCompiler, serializerCompiler, jsonSchemaTransform } from 'fastify-type-provider-zod'
+import { fastifySwagger } from '@fastify/swagger'
+import { fastifySwaggerUi } from '@fastify/swagger-ui'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { AppError } from './erros/app.error'
 import { WarehouseRoutes } from './routes/warehouse.routes'
+import { RentalContractRoutes } from './routes/rentalContract.routes'
 
 const app = Fastify({
-logger: {
+  logger: {
     transport: {
       target: 'pino-pretty',
       options: {
@@ -26,7 +27,7 @@ logger: {
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
-app.register(fastifyCors, {origin: '*'})
+app.register(fastifyCors, { origin: '*' })
 
 app.register(fastifySwagger, {
   openapi: {
@@ -39,9 +40,10 @@ app.register(fastifySwagger, {
 })
 
 app.register(prismaPlugin)
-app.register(fastifySwaggerUi, {routePrefix: '/documentation'})
+app.register(fastifySwaggerUi, { routePrefix: '/documentation' })
 app.register(TenantRoutes, { prefix: '/api/tenant' })
 app.register(WarehouseRoutes, { prefix: '/api/warehouse' })
+app.register(RentalContractRoutes, { prefix: '/api/rental-contract' })
 
 app.setErrorHandler((error, request, reply) => {
   if (error instanceof AppError) {
@@ -63,7 +65,7 @@ app.setErrorHandler((error, request, reply) => {
     })
   }
 
-   // 🔹 Fastify (AJV) validation error
+  // 🔹 Fastify (AJV) validation error
   if (error.validation && error.code === 'FST_ERR_VALIDATION') {
     return reply.status(400).send({
       statusCode: 400,
