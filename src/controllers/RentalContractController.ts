@@ -3,8 +3,8 @@ import { MakeRentalContract } from "@/usecases/rentalContract/factories/make.ren
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 class RentalContractController {
-
-  constructor(private app: FastifyInstance, private makeRentalContract: MakeRentalContract) {
+  private makeRentalContract: MakeRentalContract
+  constructor(private app: FastifyInstance,) {
     this.makeRentalContract = new MakeRentalContract(this.app)
   }
 
