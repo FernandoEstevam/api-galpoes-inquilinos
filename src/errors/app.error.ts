@@ -1,4 +1,5 @@
 export class AppError extends Error {
+  public readonly isAppError = true
   public readonly statusCode: number
   public readonly code: string
   public readonly context?: Record<string, unknown>

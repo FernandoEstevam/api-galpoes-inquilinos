@@ -10,6 +10,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { AppError } from './erros/app.error'
 import { WarehouseRoutes } from './routes/warehouse.routes'
 import { RentalContractRoutes } from './routes/rentalContract.routes'
+import { NotFoundError } from './errors/not-found.error'
 
 const app = Fastify({
   logger: {
@@ -46,14 +47,16 @@ app.register(WarehouseRoutes, { prefix: '/api/warehouse' })
 app.register(RentalContractRoutes, { prefix: '/api/rental-contract' })
 
 app.setErrorHandler((error, request, reply) => {
-  if (error instanceof AppError) {
-    return reply.status(error.statusCode).send({
-      statusCode: error.statusCode,
-      message: error.message,
-      code: error.code,
-      context: error.context,
+  if ((error as any)?.isAppError) {
+    const appError = error as AppError
+    return reply.status(appError.statusCode).send({
+      statusCode: appError.statusCode,
+      message: appError.message,
+      code: appError.code,
+      context: appError.context,
     })
   }
+
 
   // Zod errors (validação)
   if (error.name === 'ZodError') {
@@ -73,6 +76,16 @@ app.setErrorHandler((error, request, reply) => {
       message: error.message,
       validation: error.validation,
       validationContext: error.validationContext,
+    })
+  }
+
+  // Erros do Prisma (ex: Unique constraint, NotFound, etc.)
+  if (error.code?.startsWith?.('P')) {
+    return reply.status(400).send({
+      statusCode: 400,
+      message: 'Erro de banco de dados',
+      code: error.code,
+      meta: error.meta,
     })
   }
 
