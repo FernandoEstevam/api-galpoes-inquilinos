@@ -21,7 +21,7 @@ export const RentalContractRoutes = (app: FastifyInstance) => {
   app.get('/search', {
     schema: {
       tags: ['rental contract'],
-      description: "Find by id or code rental contracts",
+      description: "Find by id rental contracts",
       querystring: rentalContractInputParamsId,
       response: {
         200: rentalContractOutputSchema

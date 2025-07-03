@@ -7,7 +7,7 @@ export class DeleteRentalContractUseCase {
 
   async execute({ id }: RentalContractInputParamsId): Promise<void> {
     const rentalContractExists = await this.rentalContractRepository.findById({ id })
-    if (!rentalContractExists) throw new NotFoundError('RentaContract')
+    if (!rentalContractExists) throw new NotFoundError('RentalContract', { id })
 
     await this.rentalContractRepository.delete({ id })
   }
