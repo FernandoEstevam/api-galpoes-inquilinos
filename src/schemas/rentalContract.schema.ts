@@ -1,15 +1,15 @@
-import { cuid, nullable, z } from 'zod/v4'
+import { cuid, z } from 'zod/v4'
 
 export const baseRentalContractInputSchema = z.object({
   tenantId: z.uuid(),
   warehouseId: z.cuid(),
-  startDate: z.iso.date(),
-  endDate: z.iso.date(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
   initialValue: z.union([z.number(), z.string()]).transform(Number),
   currentValue: z.union([z.number(), z.string()]).transform(Number),
-  lastAdjustmentAt: z.iso.date().nullable().optional(),
+  lastAdjustmentAt: z.coerce.date().nullable().optional(),
   notes: z.string().nullable().optional(),
-  renewedFromId: z.cuid().nullable().optional(),
+  renewedFromId: z.cuid().optional(),
   isActive: z.boolean().optional(),
 })
 
@@ -24,12 +24,12 @@ export const rentalContractResponse = z.object({
 export const rentalContractInputUpdate = z.object({
   tenantId: z.uuid().optional(),
   warehouseId: z.cuid().optional(),
-  startDate: z.iso.date().optional(),
-  endDate: z.iso.date().optional(),
-  initialValue: z.union([z.number(), z.string()]).transform(Number).optional(),
-  currentValue: z.union([z.number(), z.string()]).transform(Number).optional(),
-  lastAdjustmentAt: z.iso.date().optional(),
-  notes: z.string().optional(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  initialValue: z.union([z.number(), z.string()]).transform(Number),
+  currentValue: z.union([z.number(), z.string()]).transform(Number),
+  lastAdjustmentAt: z.coerce.date().nullable().optional(),
+  notes: z.string().nullable().optional(),
   renewedFromId: z.cuid().optional(),
   isActive: z.boolean().optional(),
 })
@@ -43,20 +43,22 @@ export const rentalContractInputSchema = baseRentalContractInputSchema.refine(
 
 export const rentalContractOutputSchema = baseRentalContractInputSchema.extend({
   id: z.cuid(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+  renewedFromId: z.string().nullable().optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
 export const rentalContractListOutput = z.array(z.object({
+  id: z.cuid(),
   tenantId: z.uuid(),
   warehouseId: z.cuid(),
-  startDate: z.iso.date(),
-  endDate: z.iso.date(),
+  startDate: z.coerce.date().transform(val => new Date(val)),
+  endDate: z.coerce.date().transform(val => new Date(val)),
   initialValue: z.union([z.number(), z.string()]).transform(Number),
   currentValue: z.union([z.number(), z.string()]).transform(Number),
-  lastAdjustmentAt: z.iso.date().optional(),
+  lastAdjustmentAt: z.date().transform(val => new Date(val)).optional(),
   notes: z.string().optional(),
-  renewedFromId: z.cuid().optional(),
+  renewedFromId: z.string().nullable().optional(),
   isActive: z.boolean().optional(),
 }))
 
