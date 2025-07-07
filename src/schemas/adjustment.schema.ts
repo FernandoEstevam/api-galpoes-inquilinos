@@ -1,6 +1,7 @@
 import { z } from 'zod/v4'
 
 export const baseAdjustmentInputSchema = z.object({
+  id: z.cuid().optional(),
   rentalContractId: z.uuid(),
   date: z.coerce.date(),
   oldValue: z.union([z.number(), z.string()]).transform(Number),
@@ -8,29 +9,50 @@ export const baseAdjustmentInputSchema = z.object({
   reason: z.string().optional(),
 })
 
-export const adjustmentInputUpdate = z.object({
+export const adjustmentUpdateInput = z.object({
   rentalContractId: z.uuid().optional(),
-  date: z.coerce.date().optional(),
-  oldValue: z.union([z.number(), z.string()]).transform(Number).optional(),
-  newValue: z.union([z.number(), z.string()]).transform(Number).optional(),
+  oldValue: z.union([z.number(), z.string()]).transform(
+    (value)=> {
+      if(typeof value === "string") {
+        return Math.round(parseFloat(value.replace(".", "").replace(",", "."))*100)
+      }
+      return value
+    }
+  ).optional(),
+  newValue: z.union([z.number(), z.string()]).transform(
+    (value)=> {
+      if(typeof value === "string") {
+        return Math.round(parseFloat(value.replace(".", "").replace(",", "."))*100)
+      }
+      return value
+    }
+  ).refine((value) => !isNaN(value), {
+      message: "Valor inválido: não é número"
+    }).optional(),
   reason: z.string().optional(),
 })
 
-export const adjustmentInputSchema = baseAdjustmentInputSchema.refine(
+export const adjustmentCreateInput = baseAdjustmentInputSchema.refine(
   data => data.newValue > 0 && data.oldValue > 0, {
   message: 'Valores devem ser maiores que zero',
 })
 
 export const adjustmentOutputSchema = baseAdjustmentInputSchema.extend({
-  id: z.uuid(),
+  id: z.cuid(),
   createdAt: z.iso.datetime(),
 })
 
-export const adjustmentParamsId = z.object({
+export const adjustmentId = z.object({
   id: z.cuid(),
 })
 
-export type AdjustmentInput = z.infer<typeof adjustmentInputSchema>
-export type AdjustmentInputUpdate = z.infer<typeof adjustmentInputUpdate>
-export type AdjustmentParamsId = z.infer<typeof adjustmentParamsId>
+export const adjustmentResponseCreate = z.object({
+   id: z.cuid(),
+  createdAt: z.iso.datetime().transform((val) => new Date(val)),
+})
+
+export type AdjustmentCreateInput = z.infer<typeof adjustmentCreateInput>
+export type AdjustmentUpdateInput = z.infer<typeof adjustmentUpdateInput>
+export type AdjustmentId = z.infer<typeof adjustmentId>
 export type AdjustmentOutput = z.infer<typeof adjustmentOutputSchema>
+export type AdjustmentOutputResponseCreate = z.infer<typeof adjustmentResponseCreate>
