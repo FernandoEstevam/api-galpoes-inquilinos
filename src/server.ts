@@ -10,7 +10,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { AppError } from './erros/app.error'
 import { WarehouseRoutes } from './routes/warehouse.routes'
 import { RentalContractRoutes } from './routes/rentalContract.routes'
-import { AdjustmentRoutes } from './routes/adjustmentroute.routes'
+import { AdjustmentRoutes } from './routes/adjustment.routes'
 
 const app = Fastify({
   logger: {
