@@ -10,6 +10,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { AppError } from './erros/app.error'
 import { WarehouseRoutes } from './routes/warehouse.routes'
 import { RentalContractRoutes } from './routes/rentalContract.routes'
+import { AdjustmentRoutes } from './routes/adjustmentroute.routes'
 
 const app = Fastify({
   logger: {
@@ -40,10 +41,11 @@ app.register(fastifySwagger, {
 })
 
 app.register(prismaPlugin)
-app.register(fastifySwaggerUi, { routePrefix: '/documentation' })
+app.register(fastifySwaggerUi, {routePrefix: '/documentation' })
 app.register(TenantRoutes, { prefix: '/api/tenant' })
 app.register(WarehouseRoutes, { prefix: '/api/warehouse' })
 app.register(RentalContractRoutes, { prefix: '/api/rental-contract' })
+app.register(AdjustmentRoutes, { prefix: '/api/adjustment' })
 
 app.setErrorHandler((error, request, reply) => {
   if ((error as any)?.isAppError) {
