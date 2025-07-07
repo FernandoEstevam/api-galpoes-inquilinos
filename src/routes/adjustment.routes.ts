@@ -1,6 +1,6 @@
 import AdjustmentController from "@/controllers/AdjustmentController";
-import { adjustmentCreateInput, adjustmentResponseCreate } from "@/schemas/adjustment.schema";
-import { FastifyInstance } from "fastify";
+import { AdjustmentCreateInput, adjustmentCreateInput, adjustmentResponseCreate } from "@/schemas/adjustment.schema";
+import { FastifyInstance, FastifyRequest } from "fastify";
 
 export const AdjustmentRoutes = (app: FastifyInstance) => {
 
@@ -40,7 +40,7 @@ export const AdjustmentRoutes = (app: FastifyInstance) => {
         201: adjustmentResponseCreate
       }
     }
-  }, async (req, rep) => {
+  }, async (req: FastifyRequest<{Body: AdjustmentCreateInput}>, rep) => {
     return adjustment.create(req, rep)
   })
 
