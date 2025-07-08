@@ -1,22 +1,22 @@
 import AdjustmentController from "@/controllers/AdjustmentController";
-import { AdjustmentCreateInput, adjustmentCreateInput, adjustmentResponseCreate } from "@/schemas/adjustment.schema";
+import { AdjustmentCreateInput, adjustmentCreateInput, adjustmentOutputAll, adjustmentResponseCreate } from "@/schemas/adjustment.schema";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
 export const AdjustmentRoutes = (app: FastifyInstance) => {
 
   const adjustment: AdjustmentController = new AdjustmentController(app)
 
-  // app.get('/', {
-  //   schema: {
-  //     tags: ['Adjustment'],
-  //     description: "Get all rental contracts",
-  //     response: {
-  //       200: rentalContractListOutput
-  //     }
-  //   }
-  // }, async (req, rep) => {
-  //   return rentalContract.findAll(req, rep)
-  // })
+  app.get('/', {
+    schema: {
+      tags: ['Adjustment'],
+      description: "Get All Adjustment",
+      response: {
+        200: adjustmentOutputAll
+      }
+    }
+  }, async (req, rep) => {
+    return adjustment.findAll(req, rep)
+  })
 
   // app.get('/search', {
   //   schema: {
@@ -40,7 +40,7 @@ export const AdjustmentRoutes = (app: FastifyInstance) => {
         201: adjustmentResponseCreate
       }
     }
-  }, async (req: FastifyRequest<{Body: AdjustmentCreateInput}>, rep) => {
+  }, async (req: FastifyRequest<{ Body: AdjustmentCreateInput }>, rep) => {
     return adjustment.create(req, rep)
   })
 

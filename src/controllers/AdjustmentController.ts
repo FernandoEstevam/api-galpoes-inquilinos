@@ -1,26 +1,33 @@
-import { AdjustmentCreateInput, AdjustmentOutput } from "@/schemas/adjustment.schema"
-import { AdjustmentCreate } from "@/usecases/adjustment/adjustment.create"
+import { AdjustmentCreateInput, AdjustmentOutput, AdjustmentOutputAll } from "@/schemas/adjustment.schema"
+import { AdjustmentCreate } from "@/usecases/adjustment/create"
+import { AdjustmentFindAll } from "@/usecases/adjustment/findAll";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 class AdjustmentController {
 
-  private adjustmentCreate: AdjustmentCreate;
+  private adjustmentCreate: AdjustmentCreate
+  private adjustmentFindAll: AdjustmentFindAll
 
-  constructor(private app: FastifyInstance) {
+  constructor(
+    private app: FastifyInstance
+  ) {
     this.adjustmentCreate = new AdjustmentCreate(this.app)
+    this.adjustmentFindAll = new AdjustmentFindAll(this.app)
   }
 
-  async create(req: FastifyRequest<{Body: AdjustmentCreateInput}>, rep: FastifyReply): Promise<AdjustmentOutput> {
-  
+  async create(req: FastifyRequest<{ Body: AdjustmentCreateInput }>, rep: FastifyReply): Promise<AdjustmentOutput> {
+
     await this.adjustmentCreate.execute(req.body)
 
     return rep.status(201).send()
   }
 
-  // async findAll(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractListOutput> {
-  //   const getAll = await this.makeRentalContract.list().execute()
-  //   return rep.status(200).send(getAll)
-  // }
+  async findAll(req: FastifyRequest, rep: FastifyReply): Promise<AdjustmentOutputAll[]> {
+
+    const getAll = await this.adjustmentFindAll.execute()
+
+    return rep.status(200).send(getAll)
+  }
 
 
   // async findById(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
