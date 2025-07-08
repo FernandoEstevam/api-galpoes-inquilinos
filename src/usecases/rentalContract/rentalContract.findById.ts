@@ -1,16 +1,38 @@
-import { NotFoundError } from "@/errors/not-found.error"
-import { RentalContractRepository } from "@/repositories/rentalContract-repository"
-import { RentalContractInputParamsId, RentalContractOutput } from "@/schemas/rentalContract.schema"
+import { BaseUseCase } from "../base.usecase"
+import { FastifyInstance } from "fastify"
+import { PrismaRentalContractRepository } from "@/repositories/prisma/rentalContract-prisma-repository"
+import { RentalContractInputParamsId, RentalContractOutput } from "@/schemas/rentalContract.schema";
+import { ConflictError } from "@/errors/conflict.error";
 
-export class FindByIdRentalContractUseCase {
-  constructor(private rentalContractRepository: RentalContractRepository) { }
+export class RentalContractFindById extends BaseUseCase<RentalContractInputParamsId, RentalContractOutput | null> {
 
-  async execute(id: RentalContractInputParamsId): Promise<RentalContractOutput> {
-
-    const rentalContractExists = await this.rentalContractRepository.findById(id)
-
-    if (!rentalContractExists) throw new NotFoundError('Rental Contract')
-
-    return rentalContractExists
+  private readonly repository: PrismaRentalContractRepository
+  constructor(
+    private app: FastifyInstance
+  ) {
+    super()
+    this.repository = new PrismaRentalContractRepository(this.app)
   }
+
+  async execute(input: RentalContractInputParamsId): Promise<RentalContractOutput | null> {
+
+    this.process(input)
+
+    const rentalContract = await this.repository.findById(input)
+
+    if (!rentalContract) return null
+
+    return rentalContract
+
+  }
+
+  protected process({ id }: RentalContractInputParamsId): void {
+
+    if (typeof id !== "string") {
+      throw new ConflictError('Id Rental Contract não é válido!')
+    }
+
+  }
+
+
 }
