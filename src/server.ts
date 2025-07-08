@@ -41,7 +41,7 @@ app.register(fastifySwagger, {
 })
 
 app.register(prismaPlugin)
-app.register(fastifySwaggerUi, {routePrefix: '/documentation' })
+app.register(fastifySwaggerUi, { routePrefix: '/documentation' })
 app.register(TenantRoutes, { prefix: '/api/tenant' })
 app.register(WarehouseRoutes, { prefix: '/api/warehouse' })
 app.register(RentalContractRoutes, { prefix: '/api/rental-contract' })
@@ -87,6 +87,7 @@ app.setErrorHandler((error, request, reply) => {
       message: 'Erro de banco de dados',
       code: error.code,
       meta: error.meta,
+      error: error
     })
   }
 
