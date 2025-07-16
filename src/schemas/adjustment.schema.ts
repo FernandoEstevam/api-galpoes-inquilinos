@@ -11,7 +11,9 @@ export const baseAdjustmentInputSchema = z.object({
       }
       return value
     }
-  ),
+  ).refine((value) => !isNaN(value), {
+    message: "Valor inválido: não é número"
+  }),
   newValue: z.union([z.number(), z.string()]).transform(
     (value) => {
       if (typeof value === "string") {
@@ -27,6 +29,9 @@ export const baseAdjustmentInputSchema = z.object({
 
 export const adjustmentUpdateInput = z.object({
   rentalContractId: z.cuid().optional(),
+  date: z.coerce.date().refine((d) => !isNaN(d.getTime()), {
+    message: "Data inválida",
+  }).optional(),
   oldValue: z.union([z.number(), z.string()]).transform(
     (value) => {
       if (typeof value === "string") {
@@ -55,8 +60,9 @@ export const adjustmentCreateInput = baseAdjustmentInputSchema.refine(
 
 export const adjustmentOutputSchema = baseAdjustmentInputSchema.extend({
   id: z.cuid(),
+  date: z.coerce.date(),
   reason: z.string().nullable(),
-  createdAt: z.date().transform((val) => new Date(val)),
+  createdAt: z.coerce.date(),
 })
 
 export const adjustmentOutputAll = z.array(adjustmentOutputSchema)
@@ -69,6 +75,8 @@ export const adjustmentResponseCreate = z.object({
   id: z.cuid(),
   createdAt: z.date().transform((val) => new Date(val)),
 })
+
+export const adjustmentDelete = z.void()
 
 export type AdjustmentCreateInput = z.infer<typeof adjustmentCreateInput>
 export type AdjustmentUpdateInput = z.infer<typeof adjustmentUpdateInput>
