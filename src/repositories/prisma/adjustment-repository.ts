@@ -24,7 +24,7 @@ export class PrismaAdjustmentRepository extends BaseRepository<
     return await this.app.prisma.adjustment.create({ data })
   }
 
-  async update(id: AdjustmentId, data: AdjustmentUpdateInput) {
+  async update(id: AdjustmentId, data: AdjustmentUpdateInput): Promise<Adjustment> {
     return await this.app.prisma.adjustment.update({ where: id, data })
   }
 
