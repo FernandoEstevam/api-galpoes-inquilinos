@@ -4,7 +4,7 @@ import { FastifyTypeInstance } from "@/types/fastify";
 import { PrismaAdjustmentRepository } from "@/repositories/prisma/adjustment-repository";
 import { AdjustmentFindById } from "./findById";
 
-export class AdjstumentDelete extends BaseUseCase<AdjustmentId, void> {
+export class AdjustmentDelete extends BaseUseCase<AdjustmentId, void> {
 
   private repository: PrismaAdjustmentRepository
   private adjustmentById: AdjustmentFindById
