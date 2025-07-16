@@ -1,35 +1,36 @@
 import AdjustmentController from "@/controllers/AdjustmentController";
-import { AdjustmentCreateInput, adjustmentCreateInput, adjustmentOutputAll, adjustmentResponseCreate } from "@/schemas/adjustment.schema";
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { AdjustmentCreateInput, adjustmentCreateInput, adjustmentDelete, AdjustmentId, adjustmentId, adjustmentOutputAll, adjustmentOutputSchema, adjustmentResponseCreate, AdjustmentUpdateInput, adjustmentUpdateInput } from "@/schemas/adjustment.schema";
+import { FastifyTypeInstance } from "@/types/fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 
-export const AdjustmentRoutes = (app: FastifyInstance) => {
+export const AdjustmentRoutes = (app: FastifyTypeInstance) => {
 
   const adjustment: AdjustmentController = new AdjustmentController(app)
 
   app.get('/', {
     schema: {
-      tags: ['Adjustment'],
       description: "Get All Adjustment",
+      tags: ['Adjustment'],
       response: {
         200: adjustmentOutputAll
       }
     }
-  }, async (req, rep) => {
+  }, async (req: FastifyRequest, rep: FastifyReply) => {
     return adjustment.findAll(req, rep)
   })
 
-  // app.get('/search', {
-  //   schema: {
-  //     tags: ['Adjustment'],
-  //     description: "Find by id rental contracts",
-  //     querystring: rentalContractInputParamsId,
-  //     response: {
-  //       200: rentalContractOutputSchema
-  //     }
-  //   }
-  // }, async (req, rep) => {
-  //   return rentalContract.findById(req, rep)
-  // })
+  app.get('/:id', {
+    schema: {
+      tags: ['Adjustment'],
+      description: "Find by id Adjustment",
+      params: adjustmentId,
+      response: {
+        200: adjustmentOutputSchema
+      }
+    }
+  }, async (req: FastifyRequest<{ Params: AdjustmentId, Body: AdjustmentUpdateInput }>, rep: FastifyReply) => {
+    return adjustment.findById(req, rep)
+  })
 
   app.post('/', {
     schema: {
@@ -40,34 +41,34 @@ export const AdjustmentRoutes = (app: FastifyInstance) => {
         201: adjustmentResponseCreate
       }
     }
-  }, async (req: FastifyRequest<{ Body: AdjustmentCreateInput }>, rep) => {
+  }, async (req: FastifyRequest<{ Body: AdjustmentCreateInput }>, rep: FastifyReply) => {
     return adjustment.create(req, rep)
   })
 
-  // app.patch('/:id', {
-  //   schema: {
-  //     tags: ['Adjustment'],
-  //     description: "Update tenant",
-  //     params: rentalContractInputParamsId,
-  //     body: rentalContractInputUpdate,
-  //     response: {
-  //       200: rentalContractOutputSchema
-  //     }
-  //   }
-  // }, async (req, rep) => {
-  //   return rentalContract.update(req, rep)
-  // })
+  app.patch('/:id', {
+    schema: {
+      tags: ['Adjustment'],
+      description: "Update tenant",
+      params: adjustmentId,
+      body: adjustmentUpdateInput,
+      response: {
+        200: adjustmentOutputSchema
+      }
+    }
+  }, async (req: FastifyRequest<{ Params: AdjustmentId, Body: AdjustmentUpdateInput }>, rep: FastifyReply) => {
+    return adjustment.update(req, rep)
+  })
 
-  // app.delete('/:id', {
-  //   schema: {
-  //     tags: ['Adjustment'],
-  //     description: "Delete tenant",
-  //     params: rentalContractInputParamsId,
-  //     response: {
-  //       204: rentalContractResponse
-  //     }
-  //   }
-  // }, async (req, rep) => {
-  //   return rentalContract.delete(req, rep)
-  // })
+  app.delete('/:id', {
+    schema: {
+      tags: ['Adjustment'],
+      description: "Delete tenant",
+      params: adjustmentId,
+      response: {
+        204: adjustmentDelete
+      }
+    }
+  }, async (req: FastifyRequest<{ Params: AdjustmentId }>, rep: FastifyReply) => {
+    return adjustment.delete(req, rep)
+  })
 }
