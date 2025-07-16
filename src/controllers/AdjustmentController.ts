@@ -1,18 +1,28 @@
-import { AdjustmentCreateInput, AdjustmentOutput, AdjustmentOutputAll } from "@/schemas/adjustment.schema"
+import { AdjustmentCreateInput, AdjustmentId, AdjustmentOutput, AdjustmentOutputAll, AdjustmentUpdateInput } from "@/schemas/adjustment.schema"
+import { FastifyTypeInstance } from "@/types/fastify";
 import { AdjustmentCreate } from "@/usecases/adjustment/create"
+import { AdjustmentDelete } from "@/usecases/adjustment/delete";
 import { AdjustmentFindAll } from "@/usecases/adjustment/findAll";
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { AdjustmentFindById } from "@/usecases/adjustment/findById";
+import { AdjustmentUpdate } from "@/usecases/adjustment/update";
+import { FastifyReply, FastifyRequest } from "fastify"
 
 class AdjustmentController {
 
   private adjustmentCreate: AdjustmentCreate
   private adjustmentFindAll: AdjustmentFindAll
+  private adjustmentFindById: AdjustmentFindById
+  private adjustmentUpdate: AdjustmentUpdate
+  private adjustmentDelete: AdjustmentDelete
 
   constructor(
-    private app: FastifyInstance
+    private app: FastifyTypeInstance
   ) {
     this.adjustmentCreate = new AdjustmentCreate(this.app)
     this.adjustmentFindAll = new AdjustmentFindAll(this.app)
+    this.adjustmentFindById = new AdjustmentFindById(this.app)
+    this.adjustmentUpdate = new AdjustmentUpdate(this.app)
+    this.adjustmentDelete = new AdjustmentDelete(this.app)
   }
 
   async create(req: FastifyRequest<{ Body: AdjustmentCreateInput }>, rep: FastifyReply): Promise<AdjustmentOutput> {
@@ -30,32 +40,26 @@ class AdjustmentController {
   }
 
 
-  // async findById(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
+  async findById(req: FastifyRequest<{ Params: AdjustmentId }>, rep: FastifyReply): Promise<AdjustmentOutput> {
 
-  //   const { id } = rentalContractInputParamsId.parse(req.query)
+    const warehouse = await this.adjustmentFindById.execute(req.params)
 
-  //   const warehouse = await this.makeRentalContract.findById().execute({ id })
+    return rep.status(200).send(warehouse)
+  }
 
-  //   return rep.status(200).send(warehouse)
-  // }
+  async update(req: FastifyRequest<{ Params: AdjustmentId, Body: AdjustmentUpdateInput }>, rep: FastifyReply): Promise<AdjustmentOutput> {
 
-  // async update(req: FastifyRequest, rep: FastifyReply): Promise<RentalContractOutput> {
-  //   const { id } = rentalContractInputParamsId.parse(req.params)
-  //   const data = rentalContractInputUpdate.parse(req.body)
+    const adjustment = await this.adjustmentUpdate.execute({ id: req.params, data: req.body })
 
-  //   const warehouse = await this.makeRentalContract.update().execute({ id }, data)
+    return rep.status(200).send(adjustment)
+  }
 
-  //   return rep.status(200).send(warehouse)
-  // }
+  async delete(req: FastifyRequest<{ Params: AdjustmentId }>, rep: FastifyReply): Promise<void> {
 
-  // async delete(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    await this.adjustmentDelete.execute(req.params)
 
-  //   const { id } = rentalContractInputParamsId.parse(req.params)
-
-  //   await this.makeRentalContract.delete().execute({ id })
-
-  //   return rep.status(204).send()
-  // }
+    return rep.status(204).send()
+  }
 
 }
 
